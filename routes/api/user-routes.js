@@ -4,22 +4,15 @@ const { User, Post, Vote } = require('../../models');
 
 // GET /api/users
 router.get('/', (req, res) => {
-    // access our User model and run .findAll() method)
     User.findAll({
-        attributes: [
-            'id',
-            'post_url',
-            'title',
-            'created_at',
-            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE this.post.id = vote.post_id)'), 'vote_count']
-        ],
+      attributes: { exclude: ['password'] }
     })
-    .then(dbUserData => res.json(dbUserData))
-    .catch(err => {
+      .then(dbUserData => res.json(dbUserData))
+      .catch(err => {
         console.log(err);
         res.status(500).json(err);
-    });
-});
+      });
+  });
 
 // Get /api/users/1
 router.get('/:id', (req,res )=> {
